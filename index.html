@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 使用者等级测评 | 测测你是几级 AI 玩家</title>
+<meta property="og:title" content="AI 使用者等级测评">
+<meta property="og:description" content="50 道专业题目，科学评估你的 AI 使用能力等级（Lv.0~Lv.10）">
+<meta property="og:type" content="website">
+<meta name="description" content="基于 AI 使用者 10 个等级体系，50 道专业测评题，科学评估你的 AI 能力等级">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB',sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);min-height:100vh;color:#fff;line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.card{background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:32px 24px;margin:20px 0}
+h1{font-size:28px;text-align:center;margin-bottom:12px;background:linear-gradient(90deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{font-size:22px;text-align:center;margin-bottom:8px}
+.subtitle{text-align:center;color:rgba(255,255,255,0.6);font-size:14px;margin-bottom:24px}
+.btn{display:block;width:100%;padding:16px;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s;text-align:center;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;box-shadow:0 4px 20px rgba(102,126,234,0.4)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 30px rgba(102,126,234,0.6)}
+.btn-secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2)}
+.btn-pay{background:linear-gradient(135deg,#07c160,#06ad56);color:#fff;box-shadow:0 4px 20px rgba(7,193,96,0.4)}
+.btn-pay:hover{transform:translateY(-2px);box-shadow:0 6px 30px rgba(7,193,96,0.6)}
+.progress-bar{width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-bottom:20px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:3px;transition:width .4s ease}
+.progress-text{text-align:center;font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:12px}
+.question-text{font-size:17px;font-weight:500;margin-bottom:24px;line-height:1.7}
+.options{display:flex;flex-direction:column;gap:10px}
+.option{display:flex;align-items:center;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:all .2s}
+.option:hover{background:rgba(255,255,255,0.08);border-color:rgba(102,126,234,0.5)}
+.option.selected{background:rgba(102,126,234,0.2);border-color:#667eea}
+.option-dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);margin-right:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.option.selected .option-dot{border-color:#667eea;background:#667eea}
+.option.selected .option-dot::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
+.option-label{font-size:14px;color:rgba(255,255,255,0.8)}
+.nav-btns{display:flex;gap:12px;margin-top:24px}
+.nav-btns .btn{flex:1}
+.result-badge{width:120px;height:120px;margin:0 auto 20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;border:3px solid rgba(102,126,234,0.5);background:rgba(102,126,234,0.15)}
+.result-title{font-size:24px;text-align:center;margin-bottom:4px}
+.result-name{text-align:center;font-size:18px;color:rgba(255,255,255,0.7);margin-bottom:20px}
+.radar-container{width:280px;height:280px;margin:0 auto 24px}
+.detail-section{margin-top:20px;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.08)}
+.detail-section h3{font-size:15px;color:#667eea;margin-bottom:8px}
+.detail-section p,.detail-section li{font-size:14px;color:rgba(255,255,255,0.7);line-height:1.8}
+.detail-section ul{padding-left:20px}
+.share-btns{display:flex;gap:12px;margin-top:20px}
+.share-btns .btn{flex:1;font-size:14px;padding:12px}
+.pay-section{text-align:center;padding:30px 20px}
+.pay-price{font-size:48px;font-weight:700;color:#07c160;margin:16px 0 8px}
+.pay-price span{font-size:20px}
+.pay-desc{color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:24px}
+.pay-qr{width:200px;height:200px;margin:0 auto 16px;background:rgba(255,255,255,0.9);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#333;font-size:14px;padding:20px;text-align:center}
+.verify-input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#fff;font-size:16px;margin:12px 0;text-align:center;letter-spacing:4px}
+.verify-input::placeholder{letter-spacing:0;color:rgba(255,255,255,0.3)}
+.blur-preview{filter:blur(8px);pointer-events:none;user-select:none}
+.level-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:12px}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
+.feature-item{padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:13px;color:rgba(255,255,255,0.6);text-align:center}
+.hidden{display:none!important}
+@media(max-width:480px){.container{padding:12px}.card{padding:24px 16px}.question-text{font-size:15px}h1{font-size:24px}}
+canvas#poster-canvas{display:none}
+</style>
+</head>
+<body>
+<div class="container" id="app">
+<!-- 首页 -->
+<div id="page-home">
+<div class="card">
+<h1>AI 使用者等级测评</h1>
+<p class="subtitle">50 道专业题目 · 科学评估你的 AI 能力等级</p>
+<div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;margin-bottom:24px">
+<p style="font-size:14px;color:rgba(255,255,255,0.7);margin-bottom:12px">本测评基于「AI 使用者的 10 个等级」体系，从<strong>可控性、广度、形态、角色</strong>四个维度，评估你当前的 AI 使用能力等级。</p>
+<div class="features">
+<div class="feature-item">Lv.0 旁观者</div>
+<div class="feature-item">Lv.1 尝鲜者</div>
+<div class="feature-item">Lv.2 对话者</div>
+<div class="feature-item">Lv.3 驯化师</div>
+<div class="feature-item">Lv.4 跨界者</div>
+<div class="feature-item">Lv.5 织网者</div>
+<div class="feature-item">Lv.6 召唤师</div>
+<div class="feature-item">Lv.7 铸造师</div>
+<div class="feature-item">Lv.8 造物主</div>
+<div class="feature-item">Lv.9 觉醒者</div>
+<div class="feature-item" style="grid-column:span 2">Lv.10 一人军团</div>
+</div>
+</div>
+<p style="text-align:center;font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px">约需 5-8 分钟 · 已有 <span id="user-count">12,847</span> 人完成测评</p>
+<button class="btn btn-primary" onclick="startQuiz()">开始测评</button>
+</div>
+</div>
+
+<!-- 答题页 -->
+<div id="page-quiz" class="hidden">
+<div class="card">
+<div class="progress-text"><span id="q-current">1</span> / 50</div>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+<div class="question-text" id="question-text"></div>
+<div class="options" id="options-container"></div>
+<div class="nav-btns">
+<button class="btn btn-secondary" id="btn-prev" onclick="prevQuestion()">上一题</button>
+<button class="btn btn-primary" id="btn-next" onclick="nextQuestion()">下一题</button>
+</div>
+</div>
+</div>
+
+<!-- 支付拦截页 -->
+<div id="page-pay" class="hidden">
+<div class="card">
+<h2>测评完成！</h2>
+<p class="subtitle">你的 AI 等级结果已生成</p>
+<div class="blur-preview" style="margin:20px 0">
+<div class="result-badge"><span id="preview-level">?</span></div>
+<p style="text-align:center;font-size:18px">Lv.? · ??????</p>
+</div>
+<div class="pay-section">
+<p style="font-size:15px;margin-bottom:8px">解锁完整报告</p>
+<div class="pay-price"><span>¥</span>9.9</div>
+<p class="pay-desc">包含：等级判定 + 四维雷达图 + 详细分析 + 提升建议</p>
+<div class="pay-qr" id="pay-qr">
+<div>
+<p style="font-weight:600;margin-bottom:8px">微信扫码支付</p>
+<p style="font-size:12px;color:#666">请将你的微信收款码图片<br>替换此处（qr.png）</p>
+</div>
+</div>
+<p style="font-size:13px;color:rgba(255,255,255,0.4);margin:12px 0">支付后请输入微信支付订单号后4位</p>
+<input type="text" class="verify-input" id="verify-code" placeholder="输入订单后4位数字" maxlength="4">
+<button class="btn btn-pay" onclick="verifyPayment()" style="margin-top:12px">确认支付，查看结果</button>
+<button class="btn btn-secondary" onclick="skipPayment()" style="margin-top:12px;font-size:13px;opacity:0.5">跳过支付（仅供测试）</button>
+</div>
+</div>
+</div>
+
+<!-- 结果页 -->
+<div id="page-result" class="hidden">
+<div class="card" id="result-card">
+<div class="result-badge" id="result-badge"></div>
+<div class="result-title" id="result-title"></div>
+<div class="result-name" id="result-name"></div>
+<canvas id="radar-canvas" width="280" height="280" class="radar-container"></canvas>
+<div class="detail-section">
+<h3>等级说明</h3>
+<p id="result-desc"></p>
+</div>
+<div class="detail-section">
+<h3>你的四维能力</h3>
+<div id="result-dimensions"></div>
+</div>
+<div class="detail-section">
+<h3>下一步提升建议</h3>
+<ul id="result-advice"></ul>
+</div>
+<div class="share-btns">
+<button class="btn btn-primary" onclick="generatePoster()">生成海报</button>
+<button class="btn btn-secondary" onclick="copyShareLink()">复制分享链接</button>
+</div>
+</div>
+</div>
+
+<!-- 海报弹窗 -->
+<div id="poster-modal" class="hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px" onclick="closePoster(event)">
+<div style="max-width:360px;width:100%;text-align:center">
+<canvas id="poster-canvas" width="720" height="1280"></canvas>
+<img id="poster-img" style="width:100%;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5)">
+<p style="margin-top:16px;font-size:14px;color:rgba(255,255,255,0.6)">长按图片保存到相册分享</p>
+<button class="btn btn-secondary" style="margin-top:12px" onclick="closePoster(event)">关闭</button>
+</div>
+</div>
+</div>
+
+<script>
+// roundRect polyfill
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r) {
+    if(typeof r==='number')r={tl:r,tr:r,br:r,bl:r};
+    this.moveTo(x+r.tl,y);this.lineTo(x+w-r.tr,y);this.quadraticCurveTo(x+w,y,x+w,y+r.tr);
+    this.lineTo(x+w,y+h-r.br);this.quadraticCurveTo(x+w,y+h,x+w-r.br,y+h);
+    this.lineTo(x+r.bl,y+h);this.quadraticCurveTo(x,y+h,x,y+h-r.bl);
+    this.lineTo(x,y+r.tl);this.quadraticCurveTo(x,y,x+r.tl,y);this.closePath();return this;
+  };
+}
+// ===== 题库数据 =====
+const questions = [
+// Lv.0 旁观者 (3题，反向计分)
+{id:'0-1',level:0,dim:'形态',text:'我从未注册或打开过任何一款 AI 对话产品（如 ChatGPT、DeepSeek、豆包、Claude、Kimi）。',reverse:true},
+{id:'0-2',level:0,dim:'广度',text:'我对 AI 的了解主要来自新闻报道、社交媒体或他人口述，而非亲身使用体验。',reverse:true},
+{id:'0-3',level:0,dim:'角色',text:'我觉得 AI 工具是程序员或技术人员才需要用的东西，跟我的工作关系不大。',reverse:true},
+// Lv.1 尝鲜者 (4题，反向计分)
+{id:'1-1',level:1,dim:'可控',text:'我使用 AI 时，通常只发一句简短的指令（如"帮我写一封邮件"），不会补充背景信息。',reverse:true},
+{id:'1-2',level:1,dim:'可控',text:'AI 给出的回答如果不满意，我通常直接关掉或放弃，不会追问或修改提问方式。',reverse:true},
+{id:'1-3',level:1,dim:'广度',text:'我只使用 1 款 AI 产品，不清楚不同 AI 产品之间有什么区别。',reverse:true},
+{id:'1-4',level:1,dim:'可控',text:'我觉得 AI 的回答质量"看运气"，有时好有时差，但说不清为什么。',reverse:true},
+// Lv.2 对话者 (4题)
+{id:'2-1',level:2,dim:'可控',text:'当 AI 回答不满意时，我会在同一对话中追问、补充背景信息来改善输出。',reverse:false},
+{id:'2-2',level:2,dim:'可控',text:'我会给 AI 设定角色（如"你是一个资深编辑"）或指定输出风格和口吻。',reverse:false},
+{id:'2-3',level:2,dim:'可控',text:'我知道给 AI 提供参考资料（粘贴文章、数据等）能显著提升输出质量，并经常这样做。',reverse:false},
+{id:'2-4',level:2,dim:'广度',text:'我已经在工作中的 2-3 个固定场景里形成了使用 AI 的习惯。',reverse:false},
+// Lv.3 驯化师 (5题)
+{id:'3-1',level:3,dim:'可控',text:'我会在 Prompt 中主动加入约束条件（如"不确定请标注""不要编造""请注明来源"）。',reverse:false},
+{id:'3-2',level:3,dim:'可控',text:'我能写出包含角色、背景、任务、格式、约束、示例等多要素的结构化 Prompt。',reverse:false},
+{id:'3-3',level:3,dim:'广度',text:'我使用 3 款以上 AI 工具，并知道不同模型各自擅长什么（如总结用 A、写作用 B）。',reverse:false},
+{id:'3-4',level:3,dim:'形态',text:'我会使用上传文件、联网搜索、自定义指令、记忆等进阶功能。',reverse:false},
+{id:'3-5',level:3,dim:'可控',text:'面对复杂任务，我会主动拆成多步让 AI 分步执行，而不是一次性要求全部完成。',reverse:false},
+// Lv.4 跨界者 (5题)
+{id:'4-1',level:4,dim:'广度',text:'我曾用 AI 完成过自己专业领域以外的任务（如非程序员写代码、非设计师做图）。',reverse:false},
+{id:'4-2',level:4,dim:'广度',text:'我使用 5 款以上 AI 工具，涵盖不同领域（文字、代码、设计、视频、数据等）。',reverse:false},
+{id:'4-3',level:4,dim:'广度',text:'我已经为至少 1 款 AI 工具付费（如 ChatGPT Plus、Claude Pro、Cursor 等）。',reverse:false},
+{id:'4-4',level:4,dim:'角色',text:'身边有人遇到问题时会来问我"这个能不能用 AI 搞定"，我经常能给出可行方案。',reverse:false},
+{id:'4-5',level:4,dim:'可控',text:'我在陌生领域使用 AI 时，会主动交叉验证结果（换 AI 核实、搜索验证、请教专业人士）。',reverse:false},
+// Lv.5 织网者 (5题)
+{id:'5-1',level:5,dim:'可控',text:'我有自己的 Prompt 模板库，遇到同类任务会直接套用而非从零写起。',reverse:false},
+{id:'5-2',level:5,dim:'形态',text:'我为不同的工作领域建立了独立的 AI 项目/对话专区，避免上下文混乱。',reverse:false},
+{id:'5-3',level:5,dim:'形态',text:'我有意识地整理个人知识库（历史作品、风格样本、常用数据等），方便投喂给 AI。',reverse:false},
+{id:'5-4',level:5,dim:'可控',text:'我能把复杂任务设计成多步流水线，每步有明确的输入、处理逻辑和输出格式。',reverse:false},
+{id:'5-5',level:5,dim:'形态',text:'我使用 AI 的记忆/自定义指令功能，让 AI 记住我的偏好，不用每次重新解释。',reverse:false},
+// Lv.6 召唤师 (5题)
+{id:'6-1',level:6,dim:'形态',text:'我使用过 Agent 类工具（如 Claude Code、Cursor Agent、n8n 等），让 AI 直接执行多步任务。',reverse:false},
+{id:'6-2',level:6,dim:'角色',text:'我理解 ChatBot 和 Agent 的本质区别（问答 vs 自主规划执行）。',reverse:false},
+{id:'6-3',level:6,dim:'形态',text:'我知道 MCP（Model Context Protocol）是什么，或已配置过 MCP 服务器/工具调用。',reverse:false},
+{id:'6-4',level:6,dim:'角色',text:'我曾用 AI 做出过一个完整的小产品（网页、脚本、自动化工具、插件等）。',reverse:false},
+{id:'6-5',level:6,dim:'可控',text:'我在使用 Agent 时，会主动设计权限边界和检查点（如"执行前先确认""只读不写"）。',reverse:false},
+// Lv.7 铸造师 (5题)
+{id:'7-1',level:7,dim:'角色',text:'我自己设计并封装过可复用的 Skill/自定义 GPT/工作流模板，而不只是使用别人做好的。',reverse:false},
+{id:'7-2',level:7,dim:'可控',text:'我为自己的 Agent 写过系统提示/CLAUDE.md/工作手册，让它启动时就了解我的规则。',reverse:false},
+{id:'7-3',level:7,dim:'可控',text:'我掌握了"AI 反馈循环"：产出→评估→具体反馈→迭代→再评估，直到达标。',reverse:false},
+{id:'7-4',level:7,dim:'形态',text:'我搭建过自动化工作流（如用 n8n/Zapier 实现"采集→AI 处理→自动推送"）。',reverse:false},
+{id:'7-5',level:7,dim:'形态',text:'我按照"AI 可读性"重新组织过自己的文件系统或知识库结构。',reverse:false},
+// Lv.8 造物主 (5题)
+{id:'8-1',level:8,dim:'角色',text:'我用 AI 创造过有真实用户或观众的完整产品/作品（上线应用、发布视频、出版内容等）。',reverse:false},
+{id:'8-2',level:8,dim:'形态',text:'我设计过多 Agent 协作架构（不同 Agent 负责研究、写作、审核等不同角色）。',reverse:false},
+{id:'8-3',level:8,dim:'广度',text:'我的工作时间和使用 AI 的时间几乎完全重叠，很难找到完全不涉及 AI 的工作。',reverse:false},
+{id:'8-4',level:8,dim:'可控',text:'在我的核心领域，AI 辅助产出质量能达到或接近专业团队的水准。',reverse:false},
+{id:'8-5',level:8,dim:'形态',text:'我拥有完整的 AI 工作台：知识库 + Skill 库 + 自动化流水线 + 多 Agent 协作体系。',reverse:false},
+// Lv.9 觉醒者 (5题)
+{id:'9-1',level:9,dim:'角色',text:'遇到任何新任务，我的第一反应是"我和 AI 怎么一起做到最好"，而非"我自己怎么做"。',reverse:false},
+{id:'9-2',level:9,dim:'角色',text:'我已形成自己的 AI 使用方法论，并通过写作、演讲或工具开发影响了他人。',reverse:false},
+{id:'9-3',level:9,dim:'形态',text:'我的创造过程从构思阶段就有 AI 参与，人机协作是创造的默认状态。',reverse:false},
+{id:'9-4',level:9,dim:'角色',text:'我不再纠结"AI 会不会替代我"——我的工作方式本身就是人机共生的证明。',reverse:false},
+{id:'9-5',level:9,dim:'可控',text:'我能清晰区分哪些判断只能由人来做，哪些执行可以完全交给 AI。',reverse:false},
+// Lv.10 一人军团 (4题)
+{id:'10-1',level:10,dim:'广度',text:'我一个人同时在做 3 个以上不同领域的事，且每项产出质量都达到准专业水准。',reverse:false},
+{id:'10-2',level:10,dim:'角色',text:'我的产出能力已被身边人评价为"不像一个人能做到的"。',reverse:false},
+{id:'10-3',level:10,dim:'形态',text:'我拥有完整的个人 AI 系统：Skill 库 + Prompt 方法论 + Agent 工作流 + 知识体系 + 审美标准。',reverse:false},
+{id:'10-4',level:10,dim:'可控',text:'我的核心竞争力是判断力和审美，AI 负责把这个判断复制到所有执行层面。',reverse:false}
+];
+
+// ===== 等级数据 =====
+const levelData = [
+{name:'旁观者',desc:'你目前还没有真正开始使用 AI。全球约 80% 的人处于这一级别。AI 的学习曲线极平缓，只需打开一款产品说一句话，就能迈出第一步。',color:'#6b7280',percent:'80%'},
+{name:'尝鲜者',desc:'你已经开始使用 AI，但方式还比较初级——单轮指令、被动接受结果。你把 AI 当作"更高级的搜索引擎"，还没有意识到提问方式对输出质量的巨大影响。',color:'#8b5cf6',percent:'60%'},
+{name:'对话者',desc:'你开始意识到"怎么问比问什么重要"，会主动追问、补充背景、设定角色。这是 AI 使用能力的第一次真正觉醒——从被动接受到主动引导。',color:'#6366f1',percent:'45%'},
+{name:'驯化师',desc:'你已经掌握了结构化 Prompt，能主动给 AI 立规矩，让输出从"看运气"变成"稳定可用"。你超越了约 70% 的人，是多数自认为"会用 AI"的人的真实水平。',color:'#3b82f6',percent:'30%'},
+{name:'跨界者',desc:'你开始用 AI 突破专业边界，进入原本需要专业人士才能涉足的领域。你的工具栈大幅扩张，已经超越了约 90% 的人。',color:'#0ea5e9',percent:'10%'},
+{name:'织网者',desc:'AI 已经系统性地嵌入你的日常工作流。你有自己的 Prompt 模板库、项目专区、知识库，开始设计人机协作的方法论。',color:'#14b8a6',percent:'5%'},
+{name:'召唤师',desc:'你跨越了从 ChatBot 到 Agent 的门槛。AI 不再只是回答问题，而是能直接操作文件、运行代码、执行多步任务。你已经超越了约 97% 的人。',color:'#10b981',percent:'3%'},
+{name:'铸造师',desc:'你开始主动设计和创造自己的 AI 工具——自定义 Skill、专属工作流、个人 Agent 配置。你把可复用的流程固化为资产，享受 AI 时代的复利。',color:'#f59e0b',percent:'1.5%'},
+{name:'造物主',desc:'四个维度全部拉满，你用 AI 创造出真实的产品或作品。无论走技术路线还是艺术路线，你的产出质量已经能对标专业团队。你超越了约 99% 的人。',color:'#f97316',percent:'1%'},
+{name:'觉醒者',desc:'AI-First 已经成为你的思维方式本身。你不再"使用"AI，而是"与"AI 共同思考和创造。你是 AI 使用范式的创造者，真正的 0.01%。',color:'#ef4444',percent:'0.01%'},
+{name:'一人军团',desc:'AI 使用能力的终极形态。你一个人的产出能力对标传统几十人团队，代表一种全新的组织形态——AI Native。你的核心竞争力是判断力和审美。',color:'#dc2626',percent:'0.001%'}
+];
+
+// ===== 提升建议 =====
+const adviceData = [
+['打开手机应用商店，下载豆包或 Kimi，注册账号，输入"你好，你能做什么？"','不要纠结哪个最好，哪个顺眼下哪个，先迈出第一步','每天至少跟 AI 说一句话，建立最基础的使用习惯'],
+['尝试在提问时多说一句背景信息，比如"我是做销售的，需要一封给客户的跟进邮件"','AI 回答不满意时，不要关掉，试着追问"能不能更具体一些"','记录让你印象深刻的 AI 回答，分析为什么那次效果好'],
+['学习给 AI 设定角色："你是一个有 10 年经验的XX专家"','每次提问包含三要素：任务+背景+要求','尝试把参考资料粘贴给 AI，观察输出质量的变化'],
+['在 Prompt 中加入约束："不确定请标注，不要编造"','学习写结构化 Prompt：角色+背景+任务+格式+约束+示例','尝试把复杂任务拆成 3-5 步，让 AI 分步执行'],
+['尝试用 AI 做一件你专业以外的事（写代码/做设计/分析数据）','探索 2-3 款新的 AI 工具，找到各自擅长的场景','为至少一款高价值 AI 工具付费，体验 Pro 版本的差异'],
+['为你的高频任务创建 3-5 个 Prompt 模板','为不同工作领域建立独立的 AI 对话项目','整理个人知识库，把常用资料结构化存储'],
+['安装 Claude Code 或 Cursor，体验 Agent 模式','了解 MCP 的基本概念，尝试配置一个工具调用','用 Agent 做一个完整的小项目（网页/脚本/工具）'],
+['把你最常用的工作流封装成可复用的 Skill','为你的 Agent 写一份系统提示/工作手册','搭建一个自动化流水线（采集→处理→推送）'],
+['用 AI 做出一个有真实用户的完整产品','设计多 Agent 协作架构，让不同 AI 各司其职','建立完整的 AI 工作台：知识库+Skill库+自动化+多Agent'],
+['把你的 AI 使用经验系统化为可传授的方法论','从构思阶段就让 AI 参与创造过程','明确区分人的判断（价值/审美/伦理）和 AI 的执行'],
+['同时运营 3 个以上不同领域的项目','建立完整的个人 AI 系统并持续进化','定期做无 AI 的深度思考，保持判断力独立性']
+];
+
+// ===== 状态管理 =====
+let currentQ = 0;
+let answers = new Array(50).fill(0);
+
+// ===== 页面控制 =====
+function showPage(id) {
+  document.querySelectorAll('#app > div').forEach(d => d.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() {
+  currentQ = 0;
+  answers = new Array(50).fill(0);
+  showPage('page-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('q-current').textContent = currentQ + 1;
+  document.getElementById('progress-fill').style.width = ((currentQ + 1) / 50 * 100) + '%';
+  document.getElementById('question-text').textContent = q.text;
+  
+  const labels = ['完全不符合','基本不符合','部分符合','基本符合','完全符合'];
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  labels.forEach((label, i) => {
+    const div = document.createElement('div');
+    div.className = 'option' + (answers[currentQ] === i + 1 ? ' selected' : '');
+    div.innerHTML = `<div class="option-dot"></div><div class="option-label">${label}</div>`;
+    div.onclick = () => selectOption(i + 1);
+    container.appendChild(div);
+  });
+  
+  document.getElementById('btn-prev').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').textContent = currentQ === 49 ? '提交测评' : '下一题';
+}
+
+function selectOption(val) {
+  answers[currentQ] = val;
+  document.querySelectorAll('.option').forEach((el, i) => {
+    el.classList.toggle('selected', i + 1 === val);
+  });
+}
+
+function nextQuestion() {
+  if (answers[currentQ] === 0) {
+    document.getElementById('question-text').style.animation = 'none';
+    setTimeout(() => document.getElementById('question-text').style.animation = 'shake 0.3s', 10);
+    return;
+  }
+  if (currentQ === 49) {
+    showPayPage();
+    return;
+  }
+  currentQ++;
+  renderQuestion();
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+// ===== 评分算法 =====
+function calculateResult() {
+  // 计算每个等级的平均得分
+  const levelScores = new Array(11).fill(0);
+  const levelCounts = new Array(11).fill(0);
+  const dimScores = {可控:0, 广度:0, 形态:0, 角色:0};
+  const dimCounts = {可控:0, 广度:0, 形态:0, 角色:0};
+  
+  questions.forEach((q, i) => {
+    let score = answers[i];
+    if (q.reverse) score = 6 - score; // 反向计分
+    levelScores[q.level] += score;
+    levelCounts[q.level]++;
+    dimScores[q.dim] += score;
+    dimCounts[q.dim]++;
+  });
+  
+  // 计算每级平均分
+  const levelAvg = levelScores.map((s, i) => levelCounts[i] > 0 ? s / levelCounts[i] : 0);
+  
+  // 判定等级：从高到低，找到第一个平均分 >= 3.5 的等级
+  let finalLevel = 0;
+  for (let lv = 10; lv >= 0; lv--) {
+    if (levelAvg[lv] >= 3.5) {
+      finalLevel = lv;
+      break;
+    }
+  }
+  
+  // 额外校验：如果高等级达标但低等级未达标，取连续达标的最高级
+  let consecutiveLevel = 0;
+  for (let lv = 2; lv <= 10; lv++) { // 从 Lv.2 开始正向检查
+    if (levelAvg[lv] >= 3.0) {
+      consecutiveLevel = lv;
+    } else {
+      break;
+    }
+  }
+  // Lv.0 和 Lv.1 是反向题，需要特殊处理
+  if (levelAvg[0] < 3.0 && levelAvg[1] < 3.0) {
+    // 反向题得分低说明已经超越了这些等级
+    consecutiveLevel = Math.max(consecutiveLevel, 1);
+  }
+  
+  finalLevel = Math.min(finalLevel, Math.max(consecutiveLevel, finalLevel));
+  
+  // 四维得分（归一化到 0-100）
+  const dims = {
+    可控: Math.round((dimScores['可控'] / dimCounts['可控']) / 5 * 100),
+    广度: Math.round((dimScores['广度'] / dimCounts['广度']) / 5 * 100),
+    形态: Math.round((dimScores['形态'] / dimCounts['形态']) / 5 * 100),
+    角色: Math.round((dimScores['角色'] / dimCounts['角色']) / 5 * 100)
+  };
+  
+  return { level: finalLevel, dims, levelAvg };
+}
+
+// ===== 支付页 =====
+function showPayPage() {
+  const result = calculateResult();
+  document.getElementById('preview-level').textContent = 'Lv.' + result.level;
+  showPage('page-pay');
+}
+
+function verifyPayment() {
+  const code = document.getElementById('verify-code').value.trim();
+  if (code.length === 4 && /^\d{4}$/.test(code)) {
+    showResult();
+  } else {
+    alert('请输入正确的 4 位数字订单号');
+  }
+}
+
+function skipPayment() {
+  showResult();
+}
+
+// ===== 结果页 =====
+function showResult() {
+  const result = calculateResult();
+  const lv = result.level;
+  const data = levelData[lv];
+  
+  document.getElementById('result-badge').textContent = 'Lv.' + lv;
+  document.getElementById('result-badge').style.borderColor = data.color;
+  document.getElementById('result-badge').style.background = data.color + '20';
+  document.getElementById('result-title').textContent = 'Lv.' + lv + ' ' + data.name;
+  document.getElementById('result-name').textContent = '你超越了约 ' + (100 - parseFloat(data.percent)) + '% 的人';
+  document.getElementById('result-desc').textContent = data.desc;
+  
+  // 四维数据
+  const dimHtml = Object.entries(result.dims).map(([k, v]) => 
+    `<div style="display:flex;align-items:center;margin:8px 0"><span style="width:50px;font-size:13px;color:rgba(255,255,255,0.6)">${k}</span><div style="flex:1;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden"><div style="width:${v}%;height:100%;background:${data.color};border-radius:4px"></div></div><span style="width:40px;text-align:right;font-size:13px;color:rgba(255,255,255,0.6)">${v}%</span></div>`
+  ).join('');
+  document.getElementById('result-dimensions').innerHTML = dimHtml;
+  
+  // 提升建议
+  const nextLv = Math.min(lv + 1, 10);
+  const adviceHtml = adviceData[nextLv].map(a => `<li>${a}</li>`).join('');
+  document.getElementById('result-advice').innerHTML = adviceHtml;
+  
+  // 绘制雷达图
+  drawRadar(result.dims, data.color);
+  
+  showPage('page-result');
+}
+
+// ===== 雷达图 =====
+function drawRadar(dims, color) {
+  const canvas = document.getElementById('radar-canvas');
+  const ctx = canvas.getContext('2d');
+  const w = 280, h = 280, cx = w/2, cy = h/2, r = 100;
+  ctx.clearRect(0, 0, w, h);
+  
+  const labels = ['可控', '广度', '形态', '角色'];
+  const values = [dims['可控']/100, dims['广度']/100, dims['形态']/100, dims['角色']/100];
+  const n = 4;
+  
+  // 背景网格
+  for (let ring = 1; ring <= 4; ring++) {
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+      const rr = r * ring / 4;
+      const x = cx + rr * Math.cos(angle);
+      const y = cy + rr * Math.sin(angle);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.stroke();
+  }
+  
+  // 轴线
+  for (let i = 0; i < n; i++) {
+    const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.stroke();
+  }
+  
+  // 数据区域
+  ctx.beginPath();
+  for (let i = 0; i <= n; i++) {
+    const idx = i % n;
+    const angle = (Math.PI * 2 / n) * idx - Math.PI / 2;
+    const x = cx + r * values[idx] * Math.cos(angle);
+    const y = cy + r * values[idx] * Math.sin(angle);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.fillStyle = color + '40';
+  ctx.fill();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  
+  // 数据点
+  for (let i = 0; i < n; i++) {
+    const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+    const x = cx + r * values[i] * Math.cos(angle);
+    const y = cy + r * values[i] * Math.sin(angle);
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+  
+  // 标签
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = '13px sans-serif';
+  ctx.textAlign = 'center';
+  const labelOffset = 20;
+  for (let i = 0; i < n; i++) {
+    const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+    const x = cx + (r + labelOffset) * Math.cos(angle);
+    const y = cy + (r + labelOffset) * Math.sin(angle);
+    ctx.fillText(labels[i], x, y + 4);
+  }
+}
+
+// ===== 海报生成 =====
+function generatePoster() {
+  const result = calculateResult();
+  const lv = result.level;
+  const data = levelData[lv];
+  const canvas = document.getElementById('poster-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = 720, H = 1280;
+  
+  // 背景渐变
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#0f0c29');
+  grad.addColorStop(0.5, '#302b63');
+  grad.addColorStop(1, '#24243e');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+  
+  // 装饰圆
+  ctx.beginPath();
+  ctx.arc(W * 0.8, H * 0.15, 200, 0, Math.PI * 2);
+  ctx.fillStyle = data.color + '15';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(W * 0.2, H * 0.75, 150, 0, Math.PI * 2);
+  ctx.fillStyle = '#667eea15';
+  ctx.fill();
+  
+  // 标题
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '28px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('AI 使用者等级测评', W/2, 80);
+  
+  // 等级徽章
+  ctx.beginPath();
+  ctx.arc(W/2, 240, 90, 0, Math.PI * 2);
+  ctx.strokeStyle = data.color;
+  ctx.lineWidth = 4;
+  ctx.stroke();
+  ctx.fillStyle = data.color + '20';
+  ctx.fill();
+  
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 48px sans-serif';
+  ctx.fillText('Lv.' + lv, W/2, 250);
+  
+  // 等级名称
+  ctx.font = 'bold 36px sans-serif';
+  ctx.fillStyle = '#fff';
+  ctx.fillText(data.name, W/2, 380);
+  
+  ctx.font = '22px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillText('超越了 ' + (100 - parseFloat(data.percent)) + '% 的人', W/2, 430);
+  
+  // 四维数据条
+  const dims = result.dims;
+  const dimLabels = ['可控', '广度', '形态', '角色'];
+  const dimKeys = ['可控', '广度', '形态', '角色'];
+  let y = 520;
+  dimLabels.forEach((label, i) => {
+    const val = dims[dimKeys[i]];
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '20px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(label, 80, y);
+    
+    // 进度条背景
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.beginPath();
+    ctx.roundRect(160, y - 12, 400, 16, 8);
+    ctx.fill();
+    
+    // 进度条填充
+    ctx.fillStyle = data.color;
+    ctx.beginPath();
+    ctx.roundRect(160, y - 12, 400 * val / 100, 16, 8);
+    ctx.fill();
+    
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.textAlign = 'right';
+    ctx.fillText(val + '%', 640, y);
+    
+    y += 50;
+  });
+  
+  // 等级说明
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '18px sans-serif';
+  const descLines = wrapText(ctx, data.desc, W - 120);
+  let dy = 780;
+  descLines.forEach(line => {
+    ctx.fillText(line, W/2, dy);
+    dy += 28;
+  });
+  
+  // 底部
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '16px sans-serif';
+  ctx.fillText('扫码测测你是几级 AI 玩家', W/2, H - 100);
+  ctx.fillText('ai-level-test.com', W/2, H - 60);
+  
+  // 转为图片显示
+  const img = document.getElementById('poster-img');
+  img.src = canvas.toDataURL('image/png');
+  document.getElementById('poster-modal').classList.remove('hidden');
+  document.getElementById('poster-modal').style.display = 'flex';
+}
+
+function wrapText(ctx, text, maxWidth) {
+  const lines = [];
+  let line = '';
+  for (let i = 0; i < text.length; i++) {
+    const testLine = line + text[i];
+    if (ctx.measureText(testLine).width > maxWidth) {
+      lines.push(line);
+      line = text[i];
+    } else {
+      line = testLine;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+function closePoster(e) {
+  if (e.target === document.getElementById('poster-modal') || e.target.tagName === 'BUTTON') {
+    document.getElementById('poster-modal').classList.add('hidden');
+    document.getElementById('poster-modal').style.display = 'none';
+  }
+}
+
+// ===== 分享链接 =====
+function copyShareLink() {
+  const text = '我刚完成了「AI 使用者等级测评」，快来测测你是几级 AI 玩家！';
+  const url = window.location.href;
+  const shareText = text + '\n' + url;
+  
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('分享文案已复制到剪贴板！');
+    });
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = shareText;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('分享文案已复制到剪贴板！');
+  }
+}
+
+// ===== 初始化 =====
+// 随机用户数
+document.getElementById('user-count').textContent = (12000 + Math.floor(Math.random() * 3000)).toLocaleString();
+
+// shake 动画
+const style = document.createElement('style');
+style.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}';
+document.head.appendChild(style);
+</script>
+</body>
+</html>
