@@ -522,7 +522,7 @@ function closeModal(e){if(e.target.classList.contains('modal-overlay')||e.target
 
 // ===== 分享 =====
 function copyLink(){
-  const t='我刚完成了「AI 使用者等级测评」，快来测测你是几级 AI 玩家！\nhttps://caigen-skill.github.io/ai-level-test/';
+  const t='我刚完成了「AI 使用者等级测评」，快来测测你是几级 AI 玩家！\nhttps://caigen-skill.github.io/ai-level-test';
   if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>alert('已复制分享文案'))}
   else{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('已复制分享文案')}
 }
