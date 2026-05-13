@@ -202,7 +202,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','PingFang SC'
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
 <div class="modal-content">
 <img id="poster-img">
-<p class="modal-tip">长按图片保存 · 分享到朋友圈</p>
+<p class="modal-tip">长按图片保存到相册 · 分享到朋友圈或微信群<br><span style="font-size:11px;opacity:0.6">电脑端已自动下载到本地</span></p>
 <button class="modal-close" onclick="closeModal(event)">关闭</button>
 </div>
 </div>
@@ -403,54 +403,112 @@ function genPoster(){
   const r=calc(),lv=r.level,d=LV[lv];
   const cv=document.getElementById('poster-canvas'),ctx=cv.getContext('2d');
   const W=750,H=1334;
-  // 背景
-  const g=ctx.createLinearGradient(0,0,W,H);
-  g.addColorStop(0,'#0a0a1a');g.addColorStop(0.5,'#1a1a3e');g.addColorStop(1,'#0a0a1a');
+
+  // 清空
+  ctx.clearRect(0,0,W,H);
+
+  // 背景渐变
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#0f0f1e');g.addColorStop(0.4,'#1a1a3a');g.addColorStop(1,'#0a0a18');
   ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-  // 装饰
-  ctx.beginPath();ctx.arc(600,200,250,0,Math.PI*2);ctx.fillStyle=d.color+'10';ctx.fill();
-  ctx.beginPath();ctx.arc(150,1000,200,0,Math.PI*2);ctx.fillStyle='#6366f110';ctx.fill();
+
+  // 装饰光晕
+  ctx.save();ctx.globalAlpha=0.08;
+  ctx.beginPath();ctx.arc(580,180,280,0,Math.PI*2);ctx.fillStyle=d.color;ctx.fill();
+  ctx.beginPath();ctx.arc(170,1050,220,0,Math.PI*2);ctx.fillStyle='#6366f1';ctx.fill();
+  ctx.restore();
+
   // 顶部标签
-  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='500 24px sans-serif';ctx.textAlign='center';
-  ctx.fillText('AI 使用者等级测评',W/2,100);
-  // 等级
-  ctx.font='bold 96px sans-serif';ctx.fillStyle='#fff';ctx.fillText('Lv.'+lv,W/2,280);
-  ctx.font='bold 44px sans-serif';ctx.fillStyle=d.color;ctx.fillText(d.name,W/2,350);
-  ctx.font='22px sans-serif';ctx.fillStyle='rgba(255,255,255,0.5)';
-  ctx.fillText('超越了 '+(100-parseFloat(d.pct))+'% 的测评者',W/2,410);
-  // 四维数据
-  const dimKeys=['可控','广度','形态','角色'];
-  let y=500;
-  dimKeys.forEach(k=>{
-    const v=r.dims[k];
-    ctx.textAlign='left';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='22px sans-serif';
-    ctx.fillText(k,80,y);
-    // 条背景
-    ctx.fillStyle='rgba(255,255,255,0.06)';
-    roundRect(ctx,160,y-14,420,20,10);ctx.fill();
-    // 条填充
-    ctx.fillStyle=d.color;
-    roundRect(ctx,160,y-14,420*v/100,20,10);ctx.fill();
-    ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.5)';
-    ctx.fillText(v+'%',660,y);
-    y+=56;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='400 26px sans-serif';
+  ctx.fillText('AI 使用者等级测评报告',W/2,80);
+
+  // 分割线
+  ctx.beginPath();ctx.moveTo(W/2-60,120);ctx.lineTo(W/2+60,120);
+  ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;ctx.stroke();
+
+  // 等级大字
+  ctx.font='bold 108px sans-serif';ctx.fillStyle='#ffffff';
+  ctx.fillText('Lv.'+lv,W/2,230);
+
+  // 等级名称
+  ctx.font='bold 48px sans-serif';ctx.fillStyle=d.color;
+  ctx.fillText(d.name,W/2,320);
+
+  // 超越百分比
+  ctx.font='400 24px sans-serif';ctx.fillStyle='rgba(255,255,255,0.45)';
+  ctx.fillText('超越了 '+(100-parseFloat(d.pct))+'% 的测评者',W/2,380);
+
+  // 四维雷达图（内嵌在海报中）
+  const rcx=W/2,rcy=540,rR=120;
+  const keys=['可控','广度','形态','角色'],n=4;
+  const vals=keys.map(k=>(r.dims[k]||0)/100);
+
+  // 雷达网格
+  ctx.save();
+  [0.25,0.5,0.75,1].forEach(s=>{
+    ctx.beginPath();
+    for(let i=0;i<=n;i++){const a=Math.PI*2/n*i-Math.PI/2;ctx.lineTo(rcx+rR*s*Math.cos(a),rcy+rR*s*Math.sin(a))}
+    ctx.closePath();ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=1;ctx.stroke();
   });
-  // 说明
-  ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='20px sans-serif';
-  wrapText(ctx,d.desc,W/2,780,580,30);
-  // 底部CTA
-  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='20px sans-serif';
-  ctx.fillText('扫码测测你是几级 AI 玩家',W/2,H-120);
-  ctx.font='16px sans-serif';ctx.fillStyle='rgba(255,255,255,0.2)';
+  // 雷达数据
+  ctx.beginPath();
+  vals.forEach((v,i)=>{const a=Math.PI*2/n*i-Math.PI/2;const x=rcx+rR*v*Math.cos(a),y=rcy+rR*v*Math.sin(a);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});
+  ctx.closePath();ctx.fillStyle=d.color+'35';ctx.fill();ctx.strokeStyle=d.color;ctx.lineWidth=2.5;ctx.stroke();
+  // 雷达点
+  vals.forEach((v,i)=>{const a=Math.PI*2/n*i-Math.PI/2;ctx.beginPath();ctx.arc(rcx+rR*v*Math.cos(a),rcy+rR*v*Math.sin(a),5,0,Math.PI*2);ctx.fillStyle=d.color;ctx.fill()});
+  // 雷达标签
+  ctx.font='400 22px sans-serif';ctx.fillStyle='rgba(255,255,255,0.6)';ctx.textAlign='center';ctx.textBaseline='middle';
+  keys.forEach((k,i)=>{const a=Math.PI*2/n*i-Math.PI/2;ctx.fillText(k+' '+r.dims[k]+'%',rcx+(rR+40)*Math.cos(a),rcy+(rR+40)*Math.sin(a))});
+  ctx.restore();
+
+  // 四维数据条
+  const barY=720;
+  const dimKeys2=['可控','广度','形态','角色'];
+  dimKeys2.forEach((k,i)=>{
+    const v=r.dims[k]||0;
+    const by=barY+i*52;
+    ctx.textAlign='left';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='400 22px sans-serif';ctx.textBaseline='middle';
+    ctx.fillText(k,80,by);
+    // 条背景
+    drawRoundRect(ctx,150,by-10,430,20,10);ctx.fillStyle='rgba(255,255,255,0.06)';ctx.fill();
+    // 条填充
+    if(v>0){drawRoundRect(ctx,150,by-10,Math.max(430*v/100,20),20,10);ctx.fillStyle=d.color;ctx.fill();}
+    ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.5)';
+    ctx.fillText(v+'%',660,by);
+  });
+
+  // 等级说明
+  ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='400 20px sans-serif';ctx.textBaseline='top';
+  posterWrapText(ctx,d.desc,W/2,960,560,32);
+
+  // 底部引导
+  ctx.fillStyle='rgba(255,255,255,0.25)';ctx.font='400 22px sans-serif';ctx.textBaseline='middle';
+  ctx.fillText('— 测测你是几级 AI 玩家 —',W/2,H-130);
+  ctx.font='400 18px sans-serif';ctx.fillStyle='rgba(255,255,255,0.15)';
   ctx.fillText('caigen-skill.github.io/ai-level-test',W/2,H-80);
-  // 显示
-  document.getElementById('poster-img').src=cv.toDataURL('image/png');
+
+  // 生成图片并显示+下载
+  const dataUrl=cv.toDataURL('image/png');
+  const img=document.getElementById('poster-img');
+  img.src=dataUrl;
   document.getElementById('modal').classList.add('show');
+
+  // 自动触发下载（桌面端）/ 移动端长按保存
+  try{
+    const a=document.createElement('a');
+    a.href=dataUrl;
+    a.download='AI等级测评_Lv'+lv+'_'+d.name+'.png';
+    if(!/iPhone|iPad|Android/i.test(navigator.userAgent)){a.click()}
+  }catch(e){}
 }
 
-function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath()}
+function drawRoundRect(ctx,x,y,w,h,r){
+  if(w<2*r)r=w/2;if(h<2*r)r=h/2;
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+}
 
-function wrapText(ctx,text,x,y,maxW,lineH){
+function posterWrapText(ctx,text,x,y,maxW,lineH){
   let line='';
   for(let i=0;i<text.length;i++){
     const t=line+text[i];
