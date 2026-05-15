@@ -71,12 +71,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','PingFang SC'
 .verify-input:focus{border-color:var(--primary)}
 .verify-input::placeholder{letter-spacing:0;color:var(--text-dim);font-size:14px}
 /* 结果页 */
-.result-header{text-align:center;padding:24px 0 16px}
+.result-header{text-align:center;padding:24px 0 20px}
 .result-level{font-size:52px;font-weight:800;line-height:1;margin-bottom:8px;background:linear-gradient(135deg,var(--primary-light),#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .result-name{font-size:22px;font-weight:600;color:var(--text);margin-bottom:8px}
-.result-rank{font-size:13px;color:var(--text-dim);margin-bottom:8px}
-.radar-wrap{display:flex;justify-content:center;margin:16px 0}
-.dim-bars{margin:12px 0}
+.result-rank{font-size:13px;color:var(--text-dim);margin-bottom:0}
+.radar-wrap{display:flex;justify-content:center;margin:20px 0 24px}
+.dim-bars{margin:16px 0}
 .dim-row{display:flex;align-items:center;margin:12px 0}
 .dim-label{width:44px;font-size:12px;color:var(--text-dim);flex-shrink:0}
 .dim-track{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;margin:0 10px;overflow:hidden}
@@ -182,7 +182,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','PingFang SC'
 <div class="result-name" id="r-name"></div>
 <div class="result-rank" id="r-rank"></div>
 </div>
-<div class="radar-wrap"><canvas id="radar" width="240" height="240"></canvas></div>
+<div class="radar-wrap"><canvas id="radar" width="280" height="280"></canvas></div>
 <div class="dim-bars" id="dim-bars"></div>
 <div class="section"><div class="section-title">等级说明</div><div class="section-body" id="r-desc"></div></div>
 <div class="section"><div class="section-title">提升路径</div><div class="section-body"><ul id="r-advice"></ul></div></div>
@@ -371,14 +371,14 @@ function showResult(){
 // ===== 雷达图 =====
 function drawRadar(dims,color){
   const cv=document.getElementById('radar'),ctx=cv.getContext('2d');
-  const w=240,cx=120,cy=120,R=85;
+  const w=280,cx=140,cy=140,R=90;
   ctx.clearRect(0,0,w,w);
   const keys=['可控','广度','形态','角色'],n=4;
   // 网格
   [0.25,0.5,0.75,1].forEach(s=>{
     ctx.beginPath();
     for(let i=0;i<=n;i++){const a=Math.PI*2/n*i-Math.PI/2;const x=cx+R*s*Math.cos(a),y=cy+R*s*Math.sin(a);i?ctx.lineTo(x,y):ctx.moveTo(x,y)}
-    ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.stroke();
+    ctx.closePath();ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.stroke();
   });
   // 轴
   for(let i=0;i<n;i++){const a=Math.PI*2/n*i-Math.PI/2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.stroke()}
@@ -389,9 +389,9 @@ function drawRadar(dims,color){
   ctx.closePath();ctx.fillStyle=color+'30';ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
   // 点
   vals.forEach((v,i)=>{const a=Math.PI*2/n*i-Math.PI/2;ctx.beginPath();ctx.arc(cx+R*v*Math.cos(a),cy+R*v*Math.sin(a),3.5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill()});
-  // 标签
-  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='12px sans-serif';ctx.textAlign='center';
-  keys.forEach((k,i)=>{const a=Math.PI*2/n*i-Math.PI/2;const x=cx+(R+18)*Math.cos(a),y=cy+(R+18)*Math.sin(a);ctx.fillText(k,x,y+4)});
+  // 标签（只显示维度名，不带百分比）
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='13px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  keys.forEach((k,i)=>{const a=Math.PI*2/n*i-Math.PI/2;const x=cx+(R+24)*Math.cos(a),y=cy+(R+24)*Math.sin(a);ctx.fillText(k,x,y)});
 }
 
 // ===== 海报生成 =====
