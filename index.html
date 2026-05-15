@@ -71,22 +71,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','PingFang SC'
 .verify-input:focus{border-color:var(--primary)}
 .verify-input::placeholder{letter-spacing:0;color:var(--text-dim);font-size:14px}
 /* 结果页 */
-.result-header{text-align:center;padding:20px 0}
-.result-level{font-size:64px;font-weight:800;line-height:1;margin-bottom:4px;background:linear-gradient(135deg,var(--primary-light),#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.result-name{font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px}
-.result-rank{font-size:13px;color:var(--text-dim)}
-.radar-wrap{display:flex;justify-content:center;margin:24px 0}
-.dim-bars{margin:20px 0}
-.dim-row{display:flex;align-items:center;margin:10px 0}
+.result-header{text-align:center;padding:24px 0 16px}
+.result-level{font-size:52px;font-weight:800;line-height:1;margin-bottom:8px;background:linear-gradient(135deg,var(--primary-light),#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.result-name{font-size:22px;font-weight:600;color:var(--text);margin-bottom:8px}
+.result-rank{font-size:13px;color:var(--text-dim);margin-bottom:8px}
+.radar-wrap{display:flex;justify-content:center;margin:16px 0}
+.dim-bars{margin:12px 0}
+.dim-row{display:flex;align-items:center;margin:12px 0}
 .dim-label{width:44px;font-size:12px;color:var(--text-dim);flex-shrink:0}
 .dim-track{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;margin:0 10px;overflow:hidden}
 .dim-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1)}
 .dim-val{width:32px;font-size:12px;color:var(--text-muted);text-align:right;font-variant-numeric:tabular-nums}
-.section{margin-top:24px;padding:20px;background:rgba(255,255,255,0.02);border-radius:12px;border:1px solid var(--glass-border)}
-.section-title{font-size:13px;font-weight:600;color:var(--primary-light);margin-bottom:10px;letter-spacing:0.5px}
+.section{margin-top:16px;padding:16px;background:rgba(255,255,255,0.02);border-radius:12px;border:1px solid var(--glass-border)}
+.section-title{font-size:13px;font-weight:600;color:var(--primary-light);margin-bottom:8px;letter-spacing:0.5px}
 .section-body{font-size:14px;color:var(--text-muted);line-height:1.8}
 .section-body li{margin:6px 0;padding-left:4px}
-.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
 /* 分享海报弹窗 */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
 .modal-overlay.show{opacity:1;pointer-events:auto}
@@ -167,13 +167,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','PingFang SC'
 <div class="card">
 <p class="label" style="text-align:center">测评完成</p>
 <h2 class="title title-gradient" style="font-size:20px">你的 AI 等级报告已生成</h2>
-<p class="subtitle" style="margin-bottom:16px">解锁完整报告：等级判定 + 四维雷达图 + 提升路径</p>
-<div class="pay-amount">
-<div class="price"><span>¥</span>9.9</div>
-<div class="note">一次测评，终身可看</div>
-</div>
+<p class="subtitle" style="margin-bottom:24px">包含：等级判定 + 四维雷达图 + 提升路径</p>
 <div style="margin-top:20px">
-<button class="btn btn-wechat" onclick="showResult()" style="margin-top:12px">立即解锁报告</button>
+<button class="btn btn-primary" onclick="showResult()">查看我的 AI 能力等级</button>
 </div>
 </div>
 </div>
